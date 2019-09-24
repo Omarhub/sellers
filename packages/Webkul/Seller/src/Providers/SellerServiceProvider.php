@@ -124,5 +124,17 @@ class SellerServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/../Resources/views/shop/checkout/onepage.blade.php' => resource_path('views/vendor/shop/checkout/onepage.blade.php'),
         ]);
+
+        $this->publishes([
+            dirname(__DIR__) . '/Resources/views/shop/products/add-buttons.blade.php' => base_path('resources/views/vendor/shop/products/add-buttons.blade.php')
+        ]);
+
+        $this->publishes([
+            dirname(__DIR__) . '/Resources/views/shop/products/price.blade.php' => base_path('resources/views/vendor/shop/products/price.blade.php')
+        ]);
+
+        $this->publishes([
+            __DIR__ . '/../Resources/views/admin/catalog/products/index.blade.php' => resource_path('views/vendor/admin/catalog/products/index.blade.php'),
+        ]);
     }
 }

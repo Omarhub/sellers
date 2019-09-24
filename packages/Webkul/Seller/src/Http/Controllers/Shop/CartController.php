@@ -95,12 +95,60 @@ class CartController extends Controller
     }
 
     /**
+     * Create new cart instance.
+     *
+     * @param integer $id
+     * @param array   $data
+     *
+     * @return Boolean
+     */
+    public function create($id, $data, $qty = 1)
+    {
+        $cartData = [
+            'channel_id' => core()->getCurrentChannel()->id,
+
+            'global_currency_code' => core()->getBaseCurrencyCode(),
+
+            'base_currency_code' => core()->getBaseCurrencyCode(),
+
+            'channel_currency_code' => core()->getChannelBaseCurrencyCode(),
+
+            'cart_currency_code' => core()->getCurrentCurrencyCode(),
+            'items_count' => 1
+        ];
+
+        //Authentication details
+        if (Cart::getCurrentCustomer()->check()) {
+            $cartData['customer_id'] = Cart::getCurrentCustomer()->user()->id;
+            $cartData['is_guest'] = 0;
+            $cartData['customer_first_name'] = Cart::getCurrentCustomer()->user()->first_name;
+            $cartData['customer_last_name'] = Cart::getCurrentCustomer()->user()->last_name;
+            $cartData['customer_email'] = Cart::getCurrentCustomer()->user()->email;
+        } else {
+            $cartData['is_guest'] = 1;
+        }
+
+        $result = $this->cart->create($cartData);
+
+        Cart::putCart($result);
+
+        if ($result) {
+            if ($item = $this->createItem($id, $data))
+                return $item;
+            else
+                return false;
+        } else {
+            session()->flash('error', trans('shop::app.checkout.cart.create-error'));
+        }
+    }
+
+    /**
      * Function for guests user to add the product in the cart.
      *
      * @return Mixed
      */
     public function add($id)
-    {
+    {   //dd('add',request()->except('_token'));
         try {
 
             Event::fire('checkout.cart.add.before', $id);
@@ -161,7 +209,7 @@ class CartController extends Controller
 
             return $result;
         } else {
-            return Cart::create($id, $data);
+            return $this->create($id, $data);
         }
     }
 
@@ -256,10 +304,10 @@ class CartController extends Controller
             'quantity' => $data['quantity'],
             'cart_id' => Cart::getCart()->id,
             'name' => $product->name,
-            'price' => core()->convertPrice($price),
-            'base_price' => $price,
-            'total' => core()->convertPrice($price * $data['quantity']),
-            'base_total' => $price * $data['quantity'],
+            'price' => core()->convertPrice(1),
+            'base_price' => 1,
+            'total' => core()->convertPrice(1 * $data['quantity']),
+            'base_total' => 1 * $data['quantity'],
             'weight' => $weight,
             'total_weight' => $weight * $data['quantity'],
             'base_total_weight' => $weight * $data['quantity'],
@@ -292,5 +340,17 @@ class CartController extends Controller
         }
 
         return $item;
+    }
+
+    /**
+     * Add the configurable product
+     * to the cart.
+     *
+     * @return response
+     */
+    public function addConfigurable($slug)
+    {
+        session()->flash('warning', trans('seller::app.shop.products.add-seller-warning'));
+        return redirect()->route('shop.products.index', $slug);
     }
 }

@@ -21,6 +21,48 @@
     }
 }
 
+.product-image-group {
+    .add-to-buttons {
+        .review-information {
+            width: 500px !important;
+            padding: 7px !important;
+            border: 1px solid #e8e8e8;
+        }
+
+        .total-reviewproduct {
+            padding: 5px;
+            color: blue;
+        }
+    }
+}
+
+
+@media only screen and (max-width: 720px) {
+    section.product-detail div.layouter .form-container {
+        flex-direction: column;
+        .product-image-group {
+            .add-to-buttons {
+                .review-information {
+                    height:100px;
+                    margin-left:0px;
+                    display: inline-block;
+                }
+
+            }
+        }
+
+    }
+}
+
+@media only screen and (max-width: 510px) {
+    section.product-detail div.layouter .form-container {
+        div.product-image-group {
+            .product-hero-image img {
+                width: 100% !important;
+            }
+        }
+    }
+}
 //Rating Stars  And Numbers
 .custom-stars {
     width:150px;
@@ -113,9 +155,9 @@
         }
 
         .simple-product-price {
-            display: flex;
-            margin-left: -23px;
-            margin-top: 13px;
+            // display: flex;
+            // margin-left: -23px;
+            // margin-top: 13px;
         }
     }
 
@@ -183,6 +225,63 @@
         }
 }
 
+
+@media only screen and (max-width: 672px) {
+    .sale-section {
+        .section-content {
+            width: auto;
+            height: auto;
+            line-height: 24px;
+            display:inline-flex;
+            overflow: scroll;
+
+            .product-main-content {
+                margin-top: 18px;
+                margin-left: 18px;
+                width: 515px;
+                height: auto;
+                letter-spacing: 0px;
+                line-height: 24px;
+                // border: .5px solid black;
+
+                // .product-full-description {
+
+                // }
+            }
+
+            .product-image-details {
+                margin-top: 18px;
+                margin-left: 18px;
+                width: 251px;
+                height: 335px;
+                // border: .5px solid black;
+
+                .product-original-image {
+                    width: 219px;
+                    height: 186px;
+                    margin: 15px;
+                    // border: .5px solid black;
+                }
+            }
+
+            .product-review-details {
+                margin-top: 18px;
+                margin-left: 18px;
+                width: 251px;
+                height: 520px;
+                // border: .5px solid black;
+            }
+        }
+    }
+
+    #main-link {
+        display: flex;
+        flex-wrap: wrap;
+        .tablinks {
+            font-size: 14px;
+        }
+    }
+}
 
 //Overview Image
 .desc-image {
@@ -404,6 +503,7 @@
 
             .heading {
                 color:#0041ff;
+                word-break: break-all;
             }
         }
 

@@ -2,6 +2,7 @@
 
 <div class="product-price">
     @inject ('priceHelper', 'Webkul\Product\Helpers\Price')
+    @inject ('priceHelperSeller', 'Webkul\Seller\Repositories\ProductRepository')
 
     @if ($product->type == 'configurable')
         <div class="buy-now-uper-section">
@@ -12,7 +13,7 @@
             </div>
 
             <div class="show-price">
-                <span class="final-price" style="font-size:25px;">{{ core()->currency($priceHelper->getMinimalPrice($product)) }}</span>
+                <span class="final-price" style="font-size:25px;">{{ core()->currency($priceHelperSeller->getSellerMinimalPrice($product)) }}</span>
             </div>
         </div>
     @else
@@ -32,9 +33,11 @@
         </div>
         @else
         <div class="simple-product-price">
-           <span style="font-weight: 300; font-size: 20px;">{{ __('seller::app.products.price') }}</span>
+           <span style="font-weight: 300; font-size: 20px;">{{ __('shop::app.products.price-label') }}</span>
 
-            <span style="font-size: 24px; margin-left: 6px;">{{ core()->currency($product->price) }}</span>
+            {{-- <span style="font-size: 24px; margin-left: 6px;">{{ core()->currency($product->price) }}</span> --}}
+
+            <span class="final-price" style="font-size:25px;">{{ core()->currency($priceHelperSeller->getSellerMinimalPrice($product)) }}</span>
         </div>
         @endif
     @endif

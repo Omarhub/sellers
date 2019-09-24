@@ -57,12 +57,14 @@
             <div class="page-content">
                 @csrf()
 
+                @include ('seller::admin.catalog.products.accordians.sellers')
+
                 <input name="_method" type="hidden" value="PUT">
 
                 @foreach ($product->attribute_family->attribute_groups as $attributeGroup)
 
                     @if (count($attributeGroup->custom_attributes))
-
+                        @if ($attributeGroup->name != 'Price')
                         {!! view_render_event('bagisto.admin.catalog.product.edit_form_accordian.' . $attributeGroup->name . '.before', ['product' => $product]) !!}
 
                         <accordian :title="'{{ __($attributeGroup->name) }}'" :active="true">
@@ -72,7 +74,7 @@
                                 @foreach ($attributeGroup->custom_attributes as $attribute)
 
                                     @if (! $product->super_attributes->contains($attribute))
-
+                                        @if($attribute->type != 'price')
                                         <?php
                                             $validations = [];
                                             $disabled = false;
@@ -82,13 +84,21 @@
 
                                                 $disabled = true;
                                             } else {
-                                                if ($attribute->is_required) {
-                                                    array_push($validations, 'required');
+                                                if ($attribute->is_required && $attribute->type == 'price') {
+                                                    // array_push($validations, 'required');
+                                                } else if ($attribute->is_required) {
+                                                    // array_push($validations, 'required');
                                                 }
 
+
                                                 if ($attribute->type == 'price') {
-                                                    array_push($validations, 'decimal');
+                                                    continue;
+                                                    $disabled = true;
+                                                    $attribute->is_required = 0;
+                                                    // array_push($validations, 'decimal');
                                                 }
+
+
 
                                                 array_push($validations, $attribute->validation);
                                             }
@@ -101,6 +111,7 @@
                                             <div class="control-group {{ $attribute->type }}" @if ($attribute->type == 'multiselect') :class="[errors.has('{{ $attribute->code }}[]') ? 'has-error' : '']" @else :class="[errors.has('{{ $attribute->code }}') ? 'has-error' : '']" @endif>
 
                                                 <label for="{{ $attribute->code }}" {{ $attribute->is_required ? 'class=required' : '' }}>
+
                                                     {{ $attribute->admin_name }}
 
                                                     @if ($attribute->type == 'price')
@@ -135,7 +146,7 @@
                                             </div>
 
                                         @endif
-
+                                    @endif
                                     @endif
 
                                 @endforeach
@@ -145,7 +156,7 @@
                         </accordian>
 
                         {!! view_render_event('bagisto.admin.catalog.product.edit_form_accordian.' . $attributeGroup->name . '.after', ['product' => $product]) !!}
-
+                        @endif
                     @endif
 
                 @endforeach
@@ -153,7 +164,7 @@
 
                 {!! view_render_event('bagisto.admin.catalog.product.edit_form_accordian.inventories.before', ['product' => $product]) !!}
 
-                @include ('admin::catalog.products.accordians.inventories')
+                {{-- @include ('admin::catalog.products.accordians.inventories') --}}
 
                 {!! view_render_event('bagisto.admin.catalog.product.edit_form_accordian.inventories.after', ['product' => $product]) !!}
 
@@ -175,13 +186,11 @@
 
                 {!! view_render_event('bagisto.admin.catalog.product.edit_form_accordian.variations.before', ['product' => $product]) !!}
 
-                @include ('admin::catalog.products.accordians.variations')
+                @include ('seller::admin.catalog.products.accordians.variations')
 
                 {!! view_render_event('bagisto.admin.catalog.product.edit_form_accordian.variations.after', ['product' => $product]) !!}
 
                 @include ('admin::catalog.products.accordians.product-links')
-
-                @include ('seller::admin.catalog.products.accordians.sellers')
             </div>
 
         </form>

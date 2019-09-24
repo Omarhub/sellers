@@ -64,7 +64,7 @@
                         @endif
 
                         <div class="quantity">
-                            @include ('shop::products.view.configurable-options')</div>
+                            @include ('seller::shop.products.view.configurable-options')</div>
                         </div>
 
                     <div class="price-control">

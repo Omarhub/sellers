@@ -9,8 +9,7 @@ use Webkul\Core\Eloquent\Repository;
 use Webkul\Attribute\Repositories\AttributeRepository;
 use Webkul\Product\Repositories\ProductRepository as BaseProductRepository;
 use Webkul\Product\Repositories\ProductInventoryRepository;
-use Webkul\Product\Contracts\Criteria\ActiveProductCriteria;
-use Webkul\Product\Contracts\Criteria\AttributeToSelectCriteria;
+use Webkul\Seller\Repositories\ProductRepository as SellerProductRepository;
 
 /**
  * Seller Product Reposotory
@@ -49,6 +48,13 @@ class ProductRepository extends Repository
     protected $productImageRepository;
 
     /**
+     * sellerProduct Repository object
+     *
+     * @var Object
+     */
+    protected $sellerProduct;
+
+    /**
      * SellerRepository object
      *
      * @var Object
@@ -75,6 +81,8 @@ class ProductRepository extends Repository
         App $app
     )
     {
+        // $this->sellerProduct = $sellerProduct;
+
         $this->attribute = $attribute;
 
         $this->productRepository = $productRepository;
@@ -171,7 +179,7 @@ class ProductRepository extends Repository
                 if ($sellerChildProduct) {
                     parent::update(array_merge($variantData, [
                             'price' => $variantData['price'],
-                            'condition' => $sellerProduct->condition
+                            'condition' => $data['condition']
                         ]), $sellerChildProduct->id);
 
                     $this->productInventoryRepository->saveInventories(array_merge($variantData, [
@@ -236,6 +244,33 @@ class ProductRepository extends Repository
     }
 
     /**
+     * Returns the seller products of the product
+     *
+     * @param Product $product
+     * @return Collection
+     */
+    public function getsellerProductCount($product)
+    {
+        if ($product->type != 'configurable') {
+            $sellerProducts = $this->findWhere(['product_id' => $product->id]);
+
+            if ($sellerProducts) {
+                return true;
+            }
+        } else if($product->type == 'configurable') {
+            $sellerProducts = $this->findWhere(['product_id' => $product->id]);
+
+            if ($sellerProducts) {
+                return true;
+            }
+        } else {
+            return false;
+        }
+
+
+    }
+
+    /**
      * Returns the seller Name of the product
      *
      * @param Product $product
@@ -294,8 +329,10 @@ class ProductRepository extends Repository
 
             $baseProduct = $compareProduct->product()->first();
 
-            if ($baseProduct->type == 'simple') {
+            if ($baseProduct->type == 'simple' && $baseProduct->parent_id == null) {
 
+                $attributeCompareProduct[] = $compareProduct;
+            }else if($baseProduct->type == 'configurable') {
                 $attributeCompareProduct[] = $compareProduct;
             }
         }
@@ -375,4 +412,85 @@ class ProductRepository extends Repository
 
         Event::fire('seller.product.delete.after', $id);
     }
+
+    /**
+     * Returns the seller product's minimal price
+     *
+     * @param Product $product
+     * @return float
+     */
+    public function getSellerMinimalPrice($product)
+    {
+        static $price = [];
+
+        if ($product->type == 'configurable') {
+
+            $sellerProducts = $this->findWhere(['product_id' => $product->id]);
+
+            foreach ($sellerProducts as $sellerProduct) {
+
+                if ($this->findWhere(['parent_id' => $sellerProduct->id]))
+                {
+                    $varients = $this->findWhere(['parent_id' => $sellerProduct->id]);
+
+                    foreach ($varients as $varient) {
+                        $productPrice[] = $varient->price;
+                    }
+
+                } else if ($this->findWhere(['parent_id' => ''])) {
+
+                }
+
+            }
+
+            $minimalPrice = min($productPrice);
+
+            return $minimalPrice;
+        } else {
+
+            $sellerProducts = $this->findWhere(['product_id' => $product->id ,'parent_id' => null]);
+
+            if (count($sellerProducts) > 0) {
+                foreach ($sellerProducts as $sellerProduct) {
+                    $productPrice[] = $sellerProduct->price;
+                }
+
+                $minimalPrice = min($productPrice);
+
+                return $minimalPrice;
+            }
+        }
+    }
+
+    /**
+     *return $configurableProduct From Varient;
+     * get the main product from the varient product
+     *
+     * @param array $productId
+     * @return mixed
+     */
+    public function getconfigurableProduct($productId)
+    {
+        $products = app('Webkul\Product\Repositories\ProductFlatRepository');
+        $mainProduct = $products->findOneWhere(['id'=>$productId]);
+
+        return $mainProduct;
+    }
+
+    /**
+     * @param Product $product
+     * @return boolean
+     */
+    // public function haveSpecialPrice($product)
+    // {
+    //     if (is_null($product->special_price) || ! (float) $product->special_price)
+    //         return false;
+
+    //     if (core()->isChannelDateInInterval($product->special_price_from, $product->special_price_to)) {
+    //         return true;
+    //     }
+
+    //     return false;
+    // }
+
 }

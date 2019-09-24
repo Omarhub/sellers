@@ -40,7 +40,7 @@
                     </div>
                 </div>
 
-                <div class="product-image-details">
+                {{-- <div class="product-image-details">
                     <div class="product-info">
                         <div class="product-image">
                             <a href="{{ route('shop.products.index', $product->url_key) }}" title="{{ $product->name }}">
@@ -67,7 +67,7 @@
                             @endif
                         </div>
                     </div>
-                </div>
+                </div> --}}
             </div>
         </div>
     </div>
@@ -77,35 +77,6 @@
             <div class="section-content">
                 <div class="product-main-content">
                     @include ('seller::shop.products.view.attributes')
-                </div>
-
-                <div class="product-image-details">
-                    <div class="product-info">
-                        <div class="product-image">
-                            <a href="{{ route('shop.products.index', $product->url_key) }}" title="{{ $product->name }}">
-                                <img class="desc-image" src="{{ $productBaseImage['medium_image_url'] }}"/>
-                            </a>
-                        </div>
-
-                        <div class="product-name mt-20 product-name-overview">
-                            <a href="{{ url()->to('/').'/products/'.$product->url_key }}" title="{{ $product->name }}">
-                                <span>{{ $product->name }}</span>
-                            </a>
-                        </div>
-
-                        <div class="product-price mt-10 product-price-overview">
-                            @inject ('priceHelper', 'Webkul\Product\Helpers\Price')
-                            @if ($product->type == 'configurable')
-                                <span class="pro-price">{{ core()->currency($priceHelper->getMinimalPrice($product)) }}</span>
-                            @else
-                                @if ($priceHelper->haveSpecialPrice($product))
-                                    <span class="pro-price">{{ core()->currency($priceHelper->getSpecialPrice($product)) }}</span>
-                                @else
-                                    <span class="pro-price">{{ core()->currency($product->price) }}</span>
-                                @endif
-                            @endif
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -182,7 +153,8 @@
                                 </div>
 
                             @endif
-                            {{--  --}}
+
+                        {{--  --}}
                             <form action="{{ route('cart.add.seller.product', $baseProduct->id) }}" method="POST">
                                 @csrf()
                                 <input type="hidden" name="product" value="{{ $baseProduct->id }}">
@@ -225,8 +197,21 @@
 
                                         <td>
 
-                                            <div class="control-group" style=" width: 132px; margin-bottom:0px !important">
-                                                <input type="text" name="quantity" value="1" class="control">
+                                            <div class="control-group defined" style=" width: 132px; margin-bottom:0px !important">
+                                                {{-- <input type="hidden" name="quantity" value="1" class="control"> --}}
+
+                                                <div class="seller-quantity control-group" :class="[errors.has('quantity') ? 'has-error' : '']"
+                                                sellerId="{{$sellerProduct->id}}" value="2">
+
+                                                    <input class="control quantity-change minus" value="-" style="width: 35px; border-radius: 3px 0px 0px 3px;" id="tag<%{{$sellerProduct->id}}%>" readonly>
+
+                                                    <input name="quantity" id="quantity_{{$sellerProduct->id}}" class="control quantity-change inputbox" value="1" v-validate="'required|numeric|min_value:1'" style="width: 60px; position: relative; margin-left: -4px; margin-right: -4px; border-right: none;border-left: none; border-radius: 0px;" data-vv-as="&quot;{{ __('shop::app.products.quantity') }}&quot;" readonly>
+
+                                                    <input class="control quantity-change plus" id="tag<%{{$sellerProduct->id}}%>" value="+" style="width: 35px; padding: 0 12px; border-radius: 0px 3px 3px 0px;" readonly>
+
+                                                    <span class="control-error" v-if="errors.has('quantity')">@{{ errors.first('quantity') }}</span>
+                                                </div>
+
                                             </div>
                                         </td>
 
@@ -246,6 +231,7 @@
                                     </tr>
                                 </table>
                             </form>
+
                         @endforeach
                     </div>
                 </div>
@@ -285,6 +271,7 @@
 
 <script>
         eventBus.$on('configurable-variant-selected-event', function(variantId) {
+
             var nonVisible = document.getElementsByClassName('productTabs');
             var visible = document.getElementsByClassName(variantId);
 
@@ -295,6 +282,36 @@
             for (let i=0; i < visible.length; i++) {
                 visible[i].style.display = "block";
             }
+        });
+
+        $(document).ready(function () {
+            $('.plus').on('click', function() {
+                var val = $(this).parent().find('.inputbox').attr('id');
+                console.log(val);
+                var quantity = document.getElementById(val).value;
+
+                quantity = parseInt(quantity) + 1;
+
+                document.getElementById(val).value = quantity;
+                event.preventDefault();
+
+            });
+
+            $('.minus').on('click',function() {
+                var val = $(this).parent().find('.inputbox').attr('id');
+
+                var quantity = document.getElementById(val).value;
+                console.log(quantity);
+                if (quantity > 1) {
+                    quantity = parseInt(quantity) - 1;
+                } else {
+                    alert('{{ __('shop::app.products.less-quantity') }}');
+                }
+
+                document.getElementById(val).value = quantity;
+                event.preventDefault();
+
+            });
         });
 
     </script>

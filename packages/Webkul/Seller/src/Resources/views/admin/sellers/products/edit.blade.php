@@ -46,9 +46,9 @@
                                 </a>
                             </div>
 
-                            <div style="font-size: 20px;">
+                            {{-- <div style="font-size: 20px;">
                                 @include ('shop::products.price', ['product' => $product->product])
-                            </div>
+                            </div> --}}
                         </div>
 
                     </div>
@@ -63,7 +63,7 @@
 
                                 <?php $selectedOption = old('condition') ?: $product->condition ?>
 
-                                <select class="control" v-validate="'required'" id="condition" name="condition" data-vv-as="&quot;{{ __('seller::app.admin.seller.products.product-condition') }}&quot;" disabled>
+                                <select class="control" v-validate="'required'" id="condition" name="condition" data-vv-as="&quot;{{ __('seller::app.admin.seller.products.product-condition') }}&quot;">
                                     <option value="new" {{ $selectedOption == 'new' ? 'selected' : '' }}>{{ __('seller::app.admin.seller.products.new') }}</option>
                                     <option value="old" {{ $selectedOption == 'old' ? 'selected' : '' }}>{{ __('seller::app.admin.seller.products.old') }}</option>
                                 </select>
@@ -76,11 +76,11 @@
                                 <span class="control-error" v-if="errors.has('price')">@{{ errors.first('price') }}</span>
                             </div>
 
-                            <div class="control-group" :class="[errors.has('description') ? 'has-error' : '']">
+                            {{-- <div class="control-group" :class="[errors.has('description') ? 'has-error' : '']">
                                 <label for="description" class="required">{{ __('seller::app.admin.seller.products.description') }}</label>
                                 <textarea v-validate="'required'" class="control" id="description" name="description" data-vv-as="&quot;{{ __('seller::app.admin.seller.products.description') }}&quot;">{{ old('description') ?: $product->description }}</textarea>
                                 <span class="control-error" v-if="errors.has('description')">@{{ errors.first('description') }}</span>
-                            </div>
+                            </div> --}}
 
                             @if ($product->product->type != 'configurable')
                                 <div class="control-group" :class="[errors.has('warranty') ? 'has-error' : '']">
@@ -97,12 +97,12 @@
                         </div>
                     </accordian>
 
-                    <accordian :title="'{{ __('seller::app.admin.seller.products.images') }}'" :active="true">
+                    {{-- <accordian :title="'{{ __('seller::app.admin.seller.products.images') }}'" :active="true">
                         <div slot="body">
 
                             <image-wrapper :button-label="'{{ __('admin::app.catalog.products.add-image-btn-title') }}'" input-name="images" :images='@json($product->images)'></image-wrapper>
                         </div>
-                    </accordian>
+                    </accordian> --}}
 
                     @if ($product->product->type != 'configurable')
                         <accordian :title="'{{ __('seller::app.admin.seller.products.inventory') }}'" :active="true">
@@ -133,7 +133,9 @@
                                     </div>
 
                                 @endforeach
-
+                                <input type="hidden" value="{{$product->product_id}}" name="product_id">
+                                <input type="hidden" value="{{$product->seller_id}}" name="seller_id">
+                                <input type="hidden" value="{{$product->id}}" name="seller_product_id">
                             </div>
                         </accordian>
                     @endif
@@ -144,6 +146,9 @@
 
                                 <variant-list></variant-list>
 
+                                <input type="hidden" value="{{$product->product_id}}" name="product_id">
+                                <input type="hidden" value="{{$product->seller_id}}" name="seller_id">
+                                <input type="hidden" value="{{$product->id}}" name="seller_product_id">
                             </div>
                         </accordian>
                     @endif

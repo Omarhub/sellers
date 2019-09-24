@@ -36,7 +36,6 @@
             </div>
 
             @foreach ($attribute as $compareAttribute)
-
                 <?php
                     $compareProductBaseImage = $productImageHelper->getProductBaseImage($compareAttribute);
                     $customAttribute = $productViewHelper->getAdditionalData($compareAttribute);
@@ -58,23 +57,18 @@
                         </div>
 
                         <div class="product-attribute-value">
-                            <form action="{{ route('cart.add.seller.product', $compareAttribute->id) }}" method="POST">
-                                @csrf()
-                                <input type="hidden" name="product" value="{{ $compareAttribute->id }}">
-                                <input type="hidden" name="quantity" value="1" class="control">
+                            @if ($compareAttribute->url_key == '' && $compareAttribute->parent_id)
+                            <?php $configurableProductId = $attributes->getconfigurableProduct($compareAttribute->parent_id)?>
 
-                                @if ($compareAttribute->haveSufficientQuantity(1))
-                                    <div class="add-to-cart-btn seller-add-tocart">
-                                        <button type="submit" class="btn btn-lg btn-primary addtocart custom-button" style="padding: 8px 12px;">
-                                            {{ __('seller::app.shop.products.add-to-cart') }}
-                                        </button>
-                                    </div>
-                                @else
-                                    <div class="not-in-stock" style="margin-top: -8px;">
-                                        {{ __('seller::app.shop.products.out-of-stock') }}
-                                    </div>
-                                @endif
-                            </form>
+                                <a href="{{ route('shop.products.index', $configurableProductId->url_key) }}" class="btn btn-lg btn-primary addtocart" title="{{ $configurableProductId->name }}">
+                                        {{ __('shop::app.products.buy-now') }}
+                                </a>
+                            @elseif ($compareAttribute->url_key && $compareAttribute->parent_id == '')
+                                <a href="{{ route('shop.products.index', $compareAttribute->url_key) }}"  class="btn btn-lg btn-primary addtocart" title="{{ $compareAttribute->name }}">
+                                        {{ __('shop::app.products.buy-now') }}
+                                </a>
+                            @endif
+
                         </div>
                     </div>
 

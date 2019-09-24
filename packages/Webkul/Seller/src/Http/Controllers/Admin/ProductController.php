@@ -152,7 +152,7 @@ class ProductController extends Controller
     {
         $this->validate(request(), [
             'condition' => 'required',
-            'description' => 'required'
+            // 'description' => 'required'
         ]);
 
         $data = array_merge(request()->all(), [
@@ -174,7 +174,7 @@ class ProductController extends Controller
 
         $product = $this->sellerProduct->createAssign($data);
 
-        session()->flash('success', 'seller::app.admin.seller.products.create-success');
+        session()->flash('success', 'Product created successfully.');
 
         return redirect()->route($this->_config['redirect']);
     }
@@ -206,15 +206,24 @@ class ProductController extends Controller
      */
     public function update($id)
     {
-        $this->validate(request(), [
-            'description' => 'required'
-        ]);
+        $sellerProducts = $this->sellerProduct->all();
 
         $data = request()->all();
 
+        foreach ($sellerProducts as $sellerProduct) {
+            if (! isset($data['selected_variants'])) {
+                if ($sellerProduct->seller_id == $data['seller_id'] && $sellerProduct->condition == $data['condition'] && $sellerProduct->id != $data['seller_product_id']) {
+                    session()->flash('error', 'Product is already assign to seller');
+
+                    return back();
+                }
+            }
+
+        }
+
         $this->sellerProduct->updateAssign($data, $id);
 
-        session()->flash('success', 'seller::app.admin.seller.products.update-success');
+        session()->flash('success', 'Product Updated Successfully');
 
         return redirect()->route($this->_config['redirect']);
     }

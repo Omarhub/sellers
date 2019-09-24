@@ -109,13 +109,19 @@ Class ProductDataGrid extends DataGrid
         ]);
 
         $this->addColumn([
-            'index' => 'condition',
-            'label' => trans('seller::app.admin.seller.products.condition'),
-            'type' => 'string',
-            'searchable' => true,
-            'sortable' => true,
-            'filterable' => true,
-        ]);
+                 'index' => 'condition',
+                'label' => trans('seller::app.admin.seller.products.condition'),
+                'type' => 'string',
+                'searchable' => true,
+                'sortable' => true,
+                'filterable' => true,
+                'wrapper' => function($value) {
+                    if ($value->condition == 'old')
+                        return 'Used';
+                    else
+                        return 'New';
+                }
+            ]);
 
     }
 

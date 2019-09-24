@@ -46,9 +46,9 @@
                             </a>
                         </div>
 
-                        <span style="font-size: 20px;">
+                        {{-- <span style="font-size: 20px;">
                             @include ('shop::products.price', ['product' => $baseProduct])
-                        </span>
+                        </span> --}}
                     </div>
 
                 </div>
@@ -71,11 +71,11 @@
                             <span class="control-error" v-if="errors.has('price')">@{{ errors.first('price') }}</span>
                         </div>
 
-                        <div class="control-group" :class="[errors.has('description') ? 'has-error' : '']">
+                        {{-- <div class="control-group" :class="[errors.has('description') ? 'has-error' : '']">
                             <label for="description" class="required">{{ __('seller::app.admin.seller.products.description') }}</label>
                             <textarea v-validate="'required'" class="control" id="description" name="description" data-vv-as="&quot;{{ __('seller::app.admin.seller.products.description') }}&quot;">{{ old('description') }}</textarea>
                             <span class="control-error" v-if="errors.has('description')">@{{ errors.first('description') }}</span>
-                        </div>
+                        </div> --}}
 
                         @if ($baseProduct->type != 'configurable')
                             <div class="control-group" :class="[errors.has('warranty') ? 'has-error' : '']">
@@ -88,13 +88,13 @@
                     </div>
                 </accordian>
 
-                <accordian :title="'{{ __('seller::app.admin.seller.products.images') }}'" :active="true">
+                {{-- <accordian :title="'{{ __('seller::app.admin.seller.products.images') }}'" :active="true">
                     <div slot="body">
 
                         <image-wrapper :button-label="'{{ __('admin::app.catalog.products.add-image-btn-title') }}'" input-name="images"></image-wrapper>
 
                     </div>
-                </accordian>
+                </accordian> --}}
 
                 @if ($baseProduct->type != 'configurable')
                     <accordian :title="'{{ __('seller::app.admin.seller.products.inventory') }}'" :active="true">

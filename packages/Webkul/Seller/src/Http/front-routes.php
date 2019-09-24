@@ -6,6 +6,9 @@ Route::group(['middleware' => ['web', 'theme', 'locale', 'currency']], function 
         'redirect' => 'shop.checkout.cart.index'
     ])->name('cart.add.seller.product');
 
+    //Cart Items Add Configurable for more
+    Route::get('checkout/cart-item/addconfigurable/{slug}', 'Webkul\Seller\Http\Controllers\Shop\CartController@addConfigurable')->name('seller.cart.add.configurable');
+
     Route::prefix('customer')->group(function () {
         Route::group(['middleware' => ['customer']], function () {
             Route::prefix('account')->group(function () {

@@ -42,6 +42,7 @@ return [
             'seller-search-hint' => 'Start Typing seller name',
             'search' => 'Search',
             'submit' => 'Submit',
+            'add-seller' => 'Assign Product To Seller',
 
             'products' => [
                 'title' => 'Seller\'s Product',
@@ -67,7 +68,7 @@ return [
                 'general' => 'General',
                 'product-condition' => 'Product Condition',
                 'new' => 'New',
-                'old' => 'Old',
+                'old' => 'Used',
                 'price' => 'Price',
                 'description' => 'Description',
                 'images' => 'Images',
@@ -88,7 +89,8 @@ return [
                 'already-assign' => 'Product is already asigned to seller.',
                 'already-selling' => 'Seller is already selling this product.',
                 'create-success' => 'Product created successfully.',
-                'update-success' => 'Product updated successfully.'
+                'update-success' => 'Product updated successfully.',
+                'no-seller' => 'Product must assign to atleast one seller'
             ]
         ],
     ],
@@ -129,7 +131,8 @@ return [
             'review' => 'Review',
             'seller-name' => 'Seller Name',
             'sold-by' => 'Sold By : ',
-            'no-review' => 'No Review For This Product'
+            'no-review' => 'No Review For This Product',
+            'add-seller-warning' => 'Please Select The Seller',
         ],
     ]
 ];

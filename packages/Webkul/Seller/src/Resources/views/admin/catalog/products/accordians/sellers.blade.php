@@ -7,12 +7,30 @@
     </style>
 @stop
 
+<?php
+    $productRepository = app('Webkul\Seller\Repositories\ProductRepository');
+    $sellerProduct = $productRepository->getsellerProductCount($product);
+?>
 
 <accordian :title="'{{ __('seller::app.admin.seller.title') }}'" :active="true">
     <div slot="body">
 
         <seller-search></seller-search>
 
+        {{-- <div class="seller-product" style="margin-top:65px;">
+            @if ($sellerProduct == true)
+                <div class="product-assign">
+                    <span>
+                        <h1>Sellers</h1>
+                    </span>
+
+                    <div class="page-content">
+                        {!! app('Webkul\Seller\DataGrids\Admin\SellerProductDataGrid')->render() !!}
+
+                    </div>
+                </div>
+            @endif
+        </div> --}}
     </div>
 </accordian>
 
@@ -23,7 +41,7 @@
 
         <div>
             <div class="control-group">
-                <label for="search">{{ __('seller::app.admin.seller.search') }}</label>
+                <label for="search">{{ __('seller::app.admin.seller.add-seller') }}</label>
 
                 <input type="text" class="control" autocomplete="off" v-model="term" placeholder="{{ __('seller::app.admin.seller.seller-search-hint') }}" v-on:keyup="search()">
 

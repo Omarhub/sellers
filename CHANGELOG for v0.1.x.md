@@ -12,3 +12,12 @@
 
 * [feature] Customer can choose the different seller before buying the product.
 
+* [bug] Seller Not Mendatory For the assign product.
+
+* [bug] On home page and product main page, not displaying as low as price.
+
+* [bug] Changes in add to cart button to the buy now button on the home page.
+
+* [bug] home page redirect to that perticular product with a popup notification.
+
+

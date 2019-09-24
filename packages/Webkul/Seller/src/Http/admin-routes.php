@@ -83,9 +83,26 @@ Route::group(['middleware' => ['web']], function () {
             Route::post('products/massdelete', 'Webkul\Seller\Http\Controllers\Admin\ProductController@massDestroy')->defaults('_config', [
                   'redirect' => 'admin.seller.products.index'
               ])->name('seller.catalog.products.massdelete');
+
+            //Catalog Product Route Start Here
+            Route::get('/catalog/products/create', 'Webkul\Seller\Http\Controllers\Admin\Catalog\ProductController@create')->defaults('_config', [
+                'view' => 'admin::catalog.products.create'
+            ])->name('seller.admin.catalog.products.create');
+
+            Route::post('/catalog/products/create', 'Webkul\Seller\Http\Controllers\Admin\Catalog\ProductController@store')->defaults('_config', [
+                'redirect' => 'seller.admin.catalog.products.edit'
+            ])->name('seller.admin.catalog.products.store');
+
+            Route::get('/catalog/products/edit/{id}', 'Webkul\Seller\Http\Controllers\Admin\Catalog\ProductController@edit')->defaults('_config', [
+                'view' => 'admin::catalog.products.edit'
+            ])->name('seller.admin.catalog.products.edit');
+
+            Route::put('/catalog/products/edit/{id}', 'Webkul\Seller\Http\Controllers\Admin\Catalog\ProductController@update')->defaults('_config', [
+                'redirect' => 'admin.catalog.products.index'
+            ])->name('seller.admin.catalog.products.update');
         });
 
-        
+
         Route::post('assign/product', 'Webkul\Seller\Http\Controllers\Admin\ProductController@createAssignProduct')->name('admin.seller.assign.product');
     });
 });
