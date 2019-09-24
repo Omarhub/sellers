@@ -20,4 +20,6 @@
 
 * [bug] home page redirect to that perticular product with a popup notification.
 
+* [issue] exception after checkout and continue.
+
 

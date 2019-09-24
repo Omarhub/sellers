@@ -8,11 +8,12 @@ use Webkul\Checkout\Facades\Cart;
 use Webkul\Shipping\Facades\Shipping;
 use Webkul\Payment\Facades\Payment;
 use Webkul\Seller\Http\Requests\CustomerAddressForm;
-use Webkul\Discount\Helpers\NonCouponAbleRule as NonCoupon;
 use Webkul\Seller\Repositories\CartAddressRepository;
 use Webkul\Seller\Repositories\CustomerAddressRepository;
 use Webkul\Seller\Repositories\OrderRepository;
-use Webkul\Discount\Helpers\ValidatesDiscount;
+use Webkul\Discount\Helpers\Cart\CouponAbleRule as Coupon;
+use Webkul\Discount\Helpers\Cart\NonCouponAbleRule as NonCoupon;
+use Webkul\Discount\Helpers\Cart\ValidatesDiscount;
 
 /**
  * Chekout controller controlller.
