@@ -185,10 +185,14 @@
 
                                         <td>
                                             @if ($sellerProduct->warranty)
-                                                {{$sellerProduct->warranty . ' '. "Months"}}
+                                                @if ($sellerProduct->warranty ===  1) 
+                                                  {{$sellerProduct->warranty . ' '. "Month"}}
+                                                  @else {{$sellerProduct->warranty . ' '. "Months"}}
+                                                  @endif
                                             @else
-                                                <span style="color:#0041ff">N/A</span>
+                                                <span style="color:#0041ff">No Warranty</span>
                                             @endif
+
                                         </td>
 
                                         <td>
@@ -202,16 +206,25 @@
 
                                                 <div class="seller-quantity control-group" :class="[errors.has('quantity') ? 'has-error' : '']"
                                                 sellerId="{{$sellerProduct->id}}" value="2">
-
+                                                   
+                                                   @if ($sellerProduct->haveSufficientQuantity(1))
                                                     <input class="control quantity-change minus" value="-" style="width: 35px; border-radius: 3px 0px 0px 3px; cursor: pointer;" id="tag<%{{$sellerProduct->id}}%>" readonly>
-
+                                          
                                                     <input name="quantity" id="quantity_{{$sellerProduct->id}}" class="control quantity-change inputbox" value="1" v-validate="'required|numeric|min_value:1'" style="width: 60px; position: relative; margin-left: -4px; margin-right: -4px; border-right: none;border-left: none; border-radius: 0px;" data-vv-as="&quot;{{ __('shop::app.products.quantity') }}&quot;" readonly>
 
-                                                    <input class="control quantity-change plus" id="tag<%{{$sellerProduct->id}}%>" value="+" style="width: 35px; padding: 0 12px; border-radius: 0px 3px 3px 0px; cursor: pointer;" readonly>
+                                                    <input class="control quantity-change plus" cq="{{$sellerProduct->getCurrentQuantity()}}" id="tag<%{{$sellerProduct->id}}%>" value="+" style="width: 35px; padding: 0 12px; border-radius: 0px 3px 3px 0px; cursor: pointer;" readonly>
 
                                                     <span class="control-error" v-if="errors.has('quantity')">@{{ errors.first('quantity') }}</span>
-                                                </div>
-
+                                                   @else 
+                                                    <span> OUT OF STOCK :( </span>
+    						   @endif
+                                                
+						@if ($sellerProduct->getCurrentQuantity() <= 3 && $sellerProduct->getCurrentQuantity() != 0 )
+                                                <span style="color:#FF0000">{{"Only " . $sellerProduct->getCurrentQuantity(). " left!"}}</span>
+                                            @elseif ($sellerProduct->getCurrentQuantity() > 3)
+                                                <span style="color:#0041ff">{{$sellerProduct->getCurrentQuantity(). " left "  . " in stock"}}</span>  
+                                            @endif
+				           </div>
                                             </div>
                                         </td>
 
@@ -226,6 +239,11 @@
                                                 <div class="stock-status">
                                                     {{ __('seller::app.shop.products.out-of-stock') }}
                                                 </div>
+                                            @endif
+                                            @if ($sellerProduct->getCurrentQuantity() <= 3 && $sellerProduct->getCurrentQuantity() != 0 )
+                                                <span style="color:#FF0000">{{"Only " . $sellerProduct->getCurrentQuantity(). " left!"}}</span>
+                                            @elseif ($sellerProduct->getCurrentQuantity() > 3)
+                                                <span style="color:#0041ff">{{$sellerProduct->getCurrentQuantity(). " left "  . " in stock"}}</span>  
                                             @endif
                                         </td>
                                     </tr>
@@ -287,10 +305,27 @@
         $(document).ready(function () {
             $('.plus').on('click', function() {
                 var val = $(this).parent().find('.inputbox').attr('id');
+                var currentQuntity   = $(this).attr('cq');
                 console.log(val);
                 var quantity = document.getElementById(val).value;
-
-                quantity = parseInt(quantity) + 1;
+                if (quantity < currentQuntity) {
+                console.log(currentQuntity);
+                    quantity = parseInt(quantity) + 1;
+                } else {
+                     switch(currentQuntity) {
+                     case '0':
+                     // out of stock alert
+                     alert('Sorry this item is out of stock :(');
+                     break;
+                     case '1':
+                     // only one alert
+                     alert('Sorry Only ' + currentQuntity + ' is avalible in stock :(');
+                     break;
+                     default:
+                     // 2 or more alert
+                     alert('Sorry Only ' + currentQuntity + ' are avalible in stock :(');
+                     }
+                  }
 
                 document.getElementById(val).value = quantity;
                 event.preventDefault();
