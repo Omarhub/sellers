@@ -203,11 +203,11 @@
                                                 <div class="seller-quantity control-group" :class="[errors.has('quantity') ? 'has-error' : '']"
                                                 sellerId="{{$sellerProduct->id}}" value="2">
 
-                                                    <input class="control quantity-change minus" value="-" style="width: 35px; border-radius: 3px 0px 0px 3px;" id="tag<%{{$sellerProduct->id}}%>" readonly>
+                                                    <input class="control quantity-change minus" value="-" style="width: 35px; border-radius: 3px 0px 0px 3px; cursor: pointer;" id="tag<%{{$sellerProduct->id}}%>" readonly>
 
                                                     <input name="quantity" id="quantity_{{$sellerProduct->id}}" class="control quantity-change inputbox" value="1" v-validate="'required|numeric|min_value:1'" style="width: 60px; position: relative; margin-left: -4px; margin-right: -4px; border-right: none;border-left: none; border-radius: 0px;" data-vv-as="&quot;{{ __('shop::app.products.quantity') }}&quot;" readonly>
 
-                                                    <input class="control quantity-change plus" id="tag<%{{$sellerProduct->id}}%>" value="+" style="width: 35px; padding: 0 12px; border-radius: 0px 3px 3px 0px;" readonly>
+                                                    <input class="control quantity-change plus" id="tag<%{{$sellerProduct->id}}%>" value="+" style="width: 35px; padding: 0 12px; border-radius: 0px 3px 3px 0px; cursor: pointer;" readonly>
 
                                                     <span class="control-error" v-if="errors.has('quantity')">@{{ errors.first('quantity') }}</span>
                                                 </div>

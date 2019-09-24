@@ -28,7 +28,7 @@ Class ProductDataGrid extends DataGrid
                 ->leftJoin('products', 'product_flat.product_id', '=', 'products.id')
                 ->join('seller_products', 'product_flat.product_id', '=', 'seller_products.product_id')
                 ->leftJoin('sellers', 'seller_products.seller_id', '=', 'sellers.id')
-                ->leftJoin('product_inventories','seller_products.id', '=', 'product_inventories.vendor_id')
+                ->join('product_inventories','seller_products.id', '=', 'product_inventories.vendor_id')
                 ->select('seller_products.id as seller_product_id',
                     'product_flat.product_id', 'product_flat.sku',
                     'product_flat.name','seller_products.price','seller_products.id',

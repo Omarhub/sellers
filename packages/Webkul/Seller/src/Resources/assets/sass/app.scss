@@ -85,8 +85,8 @@
 //add to cart and price block product page
 .price-control {
     width:198px;
-    height: 270px;
-
+    // height:335px;
+    height: 239px;
     background: #FFFFFF;
     border: 1px solid #E8E8E8;
 
@@ -96,7 +96,7 @@
         display: inline-block;
 
         .stock-item {
-            margin-bottom: 13px;
+            margin-left: 10px;
             color: #4caf50;
         }
     }

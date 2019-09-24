@@ -26,4 +26,6 @@
 
 * [issue] inventory not increasing/decreasing on order of product.
 
+* [issue] invetory decrease for all product on order of one product.
+
 

@@ -91,7 +91,7 @@ class Cart
             $quantity = $data['quantity'];
         }
 
-        if (!$sellerProduct->haveSufficientQuantity($quantity)) {
+        if (! $sellerProduct->haveSufficientQuantity($quantity)) {
             throw new \Exception('Requested quantity not available.');
         }
     }

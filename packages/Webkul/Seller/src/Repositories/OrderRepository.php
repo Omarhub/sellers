@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Webkul\Core\Eloquent\Repository;
-use Webkul\Sales\Repositories\OrderItemRepository;
+use Webkul\Seller\Repositories\OrderItemRepository;
 
 /**
  * Order Reposotory
@@ -28,7 +28,7 @@ class OrderRepository extends Repository
     /**
      * Create a new repository instance.
      *
-     * @param  Webkul\Sales\Repositories\OrderItemRepository $orderItem
+     * @param  Webkul\Seller\Repositories\OrderItemRepository $orderItem
      * @return void
      */
     public function __construct(

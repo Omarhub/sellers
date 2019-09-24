@@ -30,5 +30,5 @@ Route::group(['middleware' => ['web', 'theme', 'locale', 'currency']], function 
         });
 
         //Checkout Save Order
-        // Route::post('/checkout/save-order', 'Webkul\Seller\Http\Controllers\Shop\OnepageController@saveOrder')->name('shop.checkout.save-order');
+        Route::post('/checkout/save-order', 'Webkul\Seller\Http\Controllers\Shop\OnepageController@saveOrder')->name('shop.checkout.save-order');
 });

@@ -68,15 +68,17 @@ class Product extends Model implements ProductContract
         foreach ($this->product->inventories as $inventory) {
             if (is_numeric($index = $channelInventorySourceIds->search($inventory->inventory_source_id)) && $this->id == $inventory->vendor_id) {
                 $total += $inventory->qty;
+                $vendor_id = $inventory->vendor_id;
             }
         }
 
-        if (!$total) {
+        if (! $total) {
             return false;
         }
 
         $orderedInventory = $this->product->ordered_inventories()
                 ->where('channel_id', core()->getCurrentChannel()->id)
+                ->where('vendor_id', $vendor_id)
                 ->first();
 
         if ($orderedInventory) {

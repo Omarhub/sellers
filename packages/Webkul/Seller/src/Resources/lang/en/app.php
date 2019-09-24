@@ -143,5 +143,4 @@ return [
             'warranty' => 'Warranty'
         ]
     ]
-
 ];

@@ -78,6 +78,11 @@ class SellerServiceProvider extends ServiceProvider
         $this->app->concord->registerModel(
             \Webkul\Checkout\Contracts\CartItem::class, \Webkul\Checkout\Models\CartItem::class
         );
+
+        $this->app->concord->registerModel(
+            \Webkul\Product\Contracts\ProductOrderedInventory::class, \Webkul\Seller\Models\productOrderedInventory::class
+        );
+
     }
 
      /**
