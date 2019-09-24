@@ -87,4 +87,35 @@ class Product extends Model implements ProductContract
 
         return $qty <= $total ? true : false;
     }
+    public function getCurrentQuantity()
+    {
+        $total = 0;
+
+        $channelInventorySourceIds = core()->getCurrentChannel()
+                ->inventory_sources()
+                ->where('status', 1)
+                ->pluck('id');
+
+        foreach ($this->product->inventories as $inventory) {
+            if (is_numeric($index = $channelInventorySourceIds->search($inventory->inventory_source_id)) && $this->id == $inventory->vendor_id) {
+                $total += $inventory->qty;
+                $vendor_id = $inventory->vendor_id;
+            }
+        }
+
+        if (! $total) {
+            return $total;
+        }
+
+        $orderedInventory = $this->product->ordered_inventories()
+                ->where('channel_id', core()->getCurrentChannel()->id)
+                ->where('vendor_id', $vendor_id)
+                ->first();
+
+        if ($orderedInventory) {
+            $total -= $orderedInventory->qty;
+        }
+
+        return $total;
+    }
 }
