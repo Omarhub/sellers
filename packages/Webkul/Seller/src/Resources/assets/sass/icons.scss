@@ -1,0 +1,17 @@
+.seller-icon {
+    width: 48px;
+    height: 48px;
+    display: inline-block;
+    background-size: cover;
+    background-image: url("../images/Icon-Seller.svg");
+}
+
+.active {
+    .seller-icon {
+        background-image: url("../images/Icon-Seller-Active.svg");
+    }
+
+    &.seller-icon {
+        background-image: url("../images/Icon-Seller-Active.svg");
+    }
+}

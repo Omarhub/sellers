@@ -1,0 +1,35 @@
+@import "icons";
+
+.dropdown-list .dropdown-container {
+    text-align: right;
+}
+
+.dropdown-list.product-search-list {
+    .dropdown-container {
+        padding: 0 0 0 10px;
+        max-height: 344px;
+
+        li {
+            img {
+                width: 52px;
+                height: 60px;
+            }
+        }
+
+        .table table tbody td {
+            vertical-align: middle;
+
+            &.last {
+                // width: 120px;
+
+                a {
+                    margin: 0;
+                }
+
+                .btn {
+                    color: #fff;
+                }
+            }
+        }
+    }
+}
