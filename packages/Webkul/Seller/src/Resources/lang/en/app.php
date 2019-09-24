@@ -134,5 +134,14 @@ return [
             'no-review' => 'No Review For This Product',
             'add-seller-warning' => 'Please Select The Seller',
         ],
+    ],
+
+    'sales' => [
+        'orders' => [
+            'seller-name' =>'Seller Name',
+            'item-condition' => 'Condition',
+            'warranty' => 'Warranty'
+        ]
     ]
+
 ];

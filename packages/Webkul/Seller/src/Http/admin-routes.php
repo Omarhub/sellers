@@ -100,6 +100,11 @@ Route::group(['middleware' => ['web']], function () {
             Route::put('/catalog/products/edit/{id}', 'Webkul\Seller\Http\Controllers\Admin\Catalog\ProductController@update')->defaults('_config', [
                 'redirect' => 'admin.catalog.products.index'
             ])->name('seller.admin.catalog.products.update');
+
+            //sales route start from here
+            Route::post('/shipments/create/{order_id}', 'Webkul\Seller\Http\Controllers\Admin\Sales\ShipmentController@store')->defaults('_config', [
+                'redirect' => 'admin.sales.orders.view'
+            ])->name('seller.admin.sales.shipments.store');
         });
 
 

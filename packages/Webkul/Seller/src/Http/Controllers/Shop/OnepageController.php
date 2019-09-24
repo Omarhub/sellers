@@ -2,8 +2,6 @@
 
 namespace Webkul\Seller\Http\Controllers\Shop;
 
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Webkul\Checkout\Facades\Cart;
 use Webkul\Shipping\Facades\Shipping;
 use Webkul\Payment\Facades\Payment;

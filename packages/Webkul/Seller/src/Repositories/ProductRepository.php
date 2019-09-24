@@ -481,16 +481,12 @@ class ProductRepository extends Repository
      * @param Product $product
      * @return boolean
      */
-    // public function haveSpecialPrice($product)
-    // {
-    //     if (is_null($product->special_price) || ! (float) $product->special_price)
-    //         return false;
+    public function sellerProduct($productId)
+    {
+        $sellerProduct = $this->findOneByField('id', $productId);
 
-    //     if (core()->isChannelDateInInterval($product->special_price_from, $product->special_price_to)) {
-    //         return true;
-    //     }
+        return $sellerProduct;
 
-    //     return false;
-    // }
+    }
 
 }

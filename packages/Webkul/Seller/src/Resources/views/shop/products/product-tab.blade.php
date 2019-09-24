@@ -122,7 +122,7 @@
 
                         @foreach ($productRepository->getSellerProducts($product) as $sellerProduct)
                             <?php $sellerName = $productRepository->getSellerName($sellerProduct->seller->id)?>
-                            {{--  --}}
+
                             <?php $attributes = [];
                             ?>
 

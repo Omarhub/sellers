@@ -28,21 +28,13 @@ Class ProductDataGrid extends DataGrid
                 ->leftJoin('products', 'product_flat.product_id', '=', 'products.id')
                 ->join('seller_products', 'product_flat.product_id', '=', 'seller_products.product_id')
                 ->leftJoin('sellers', 'seller_products.seller_id', '=', 'sellers.id')
+                ->leftJoin('product_inventories','seller_products.id', '=', 'product_inventories.vendor_id')
                 ->select('seller_products.id as seller_product_id',
                     'product_flat.product_id', 'product_flat.sku',
                     'product_flat.name','seller_products.price','seller_products.id',
-                    'seller_products.condition','sellers.created_at',
+                    'seller_products.condition', 'product_inventories.qty as quantity', 'sellers.created_at',
                      DB::raw('CONCAT(sellers.first_name, " ", sellers.last_name) as seller_name'));
 
-
-        $queryBuilder = $queryBuilder->leftJoin('product_inventories', function($qb) {
-        $qb->on('product_flat.product_id', 'product_inventories.product_id')
-            ->where('product_inventories.vendor_id', '<>', 0);
-        });
-
-        $queryBuilder
-            ->groupBy('seller_products.id')
-            ->addSelect(DB::raw('SUM(product_inventories.qty) as quantity'));
 
         $this->addFilter('seller_name', DB::raw('CONCAT(sellers.first_name, " ", sellers.last_name)'));
         $this->addFilter('sku', 'product_flat.sku');

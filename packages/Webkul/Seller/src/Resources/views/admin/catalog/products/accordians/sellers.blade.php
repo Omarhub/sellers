@@ -1,36 +1,8 @@
-@section('css')
-    @parent
-    <style>
-        .modal {
-            display: none;
-        }
-    </style>
-@stop
-
-<?php
-    $productRepository = app('Webkul\Seller\Repositories\ProductRepository');
-    $sellerProduct = $productRepository->getsellerProductCount($product);
-?>
-
 <accordian :title="'{{ __('seller::app.admin.seller.title') }}'" :active="true">
     <div slot="body">
 
         <seller-search></seller-search>
 
-        {{-- <div class="seller-product" style="margin-top:65px;">
-            @if ($sellerProduct == true)
-                <div class="product-assign">
-                    <span>
-                        <h1>Sellers</h1>
-                    </span>
-
-                    <div class="page-content">
-                        {!! app('Webkul\Seller\DataGrids\Admin\SellerProductDataGrid')->render() !!}
-
-                    </div>
-                </div>
-            @endif
-        </div> --}}
     </div>
 </accordian>
 
@@ -41,7 +13,7 @@
 
         <div>
             <div class="control-group">
-                <label for="search">{{ __('seller::app.admin.seller.add-seller') }}</label>
+                <label for="search">{{ __('seller::app.admin.seller.search') }}</label>
 
                 <input type="text" class="control" autocomplete="off" v-model="term" placeholder="{{ __('seller::app.admin.seller.seller-search-hint') }}" v-on:keyup="search()">
 
@@ -58,70 +30,69 @@
                 </div>
             </div>
 
-            <div class="modal" id="modal">
-                <form method="POST" action="{{ route('admin.seller.assign.product') }}">
+            <modal id="productForm" :is-open="$root.$root.modalIds.productForm">
+                <h3 slot="header">{{ __('seller::app.admin.seller.products.assing-title') }}</h3>
 
-                @csrf()
+                <div slot="body">
+                    <form action="{{ route('admin.seller.assign.product') }}" method="POST" data-vv-scope="product-form" @submit.prevent="onSubmit($event)">
+                        @csrf
 
-                <div class="modal-container">
-                    <div class="modal-header">
-                        <h3>{{ __('seller::app.admin.seller.products.assing-title') }}</h3>
-                        <i class="icon remove-icon"  @click="closeModal()"></i>
-                    </div>
-                    <div class="modal-body">
+                        <div class="form-container">
 
-                        <input type="hidden" name="product_id" value="{{ $product->product->id }}">
+                            <input type="hidden" name="product_id" :value="product_id">
 
-                        <input type="hidden" name="seller_id" :value="seller_id">
+                            <input type="hidden" name="seller_id" :value="seller_id">
 
-                        <div class="control-group" :class="[errors.has('condition') ? 'has-error' : '']">
-                            <label for="condition" class="required">{{ __('seller::app.admin.seller.products.product-condition') }}</label>
-                            <select class="control" v-validate="'required'" id="condition" name="condition" data-vv-as="&quot;{{ __('seller::app.admin.seller.products.product-condition') }}&quot;">
-                                <option value="new">{{ __('seller::app.admin.seller.products.new') }}</option>
-                                <option value="old">{{ __('seller::app.admin.seller.products.old') }}</option>
-                            </select>
-                            <span class="control-error" v-if="errors.has('type')">@{{ errors.first('type') }}</span>
-                        </div>
-
-                        @if ($product->product->type != 'configurable')
-                            <div class="control-group" :class="[errors.has('price') ? 'has-error' : '']">
-                                <label for="price" class="required">{{ __('seller::app.admin.seller.products.price') }}</label>
-                                <input type="text" v-validate="'required'" class="control" id="price" name="price" value="{{ old('price') }}" data-vv-as="&quot;{{ __('seller::app.admin.seller.products.price') }}&quot;"/>
-                                <span class="control-error" v-if="errors.has('price')">@{{ errors.first('price') }}</span>
+                            <div class="control-group" :class="[errors.has('product-form.condition') ? 'has-error' : '']">
+                                <label for="condition" class="required">{{ __('seller::app.admin.seller.products.product-condition') }}</label>
+                                <select class="control" v-validate="'required'" id="condition" name="condition" data-vv-as="&quot;{{ __('seller::app.admin.seller.products.product-condition') }}&quot;">
+                                    <option value="new">{{ __('seller::app.admin.seller.products.new') }}</option>
+                                    <option value="old">{{ __('seller::app.admin.seller.products.old') }}</option>
+                                </select>
+                                <span class="control-error" v-if="errors.has('product-form.condition')">@{{ errors.first('product-form.condition') }}</span>
                             </div>
 
-                            <div class="control-group" :class="[errors.has('warranty') ? 'has-error' : '']">
-                                <label for="warranty" class="required">{{ __('seller::app.admin.seller.products.warranty') }}</label>
-                                <input type="text" v-validate="'required'" class="control" id="warranty" name="warranty" value="{{ old('warranty') }}" data-vv-as="&quot;{{ __('seller::app.admin.seller.products.warranty') }}&quot;"/>
-                                <span class="control-error" v-if="errors.has('warranty')">@{{ errors.first('warranty') }}</span>
-                            </div>
-
-                            @foreach ($inventorySources as $inventorySource)
-
-                                <div class="control-group" :class="[errors.has('inventories[{{ $inventorySource->id }}]') ? 'has-error' : '']">
-                                    <label>{{ $inventorySource->name }}</label>
-
-                                    <input type="text" v-validate="'numeric|min:0'" name="inventories[{{ $inventorySource->id }}]" class="control" value="{{ old('inventories[' . $inventorySource->id . ']') }}" data-vv-as="&quot;{{ $inventorySource->name }}&quot;"/>
-
-                                    <span class="control-error" v-if="errors.has('inventories[{{ $inventorySource->id }}]')">@{{ errors.first('inventories[{!! $inventorySource->id !!}]') }}</span>
+                            @if ($product->product->type != 'configurable')
+                                <div class="control-group" :class="[errors.has('product-form.price') ? 'has-error' : '']">
+                                    <label for="price" class="required">{{ __('seller::app.admin.seller.products.price') }}</label>
+                                    <input type="text" v-validate="'required'" class="control" id="price" name="price" value="{{ old('price') }}" data-vv-as="&quot;{{ __('seller::app.admin.seller.products.price') }}&quot;"/>
+                                    <span class="control-error" v-if="errors.has('product-form.price')">@{{ errors.first('product-form.price') }}</span>
                                 </div>
 
-                            @endforeach
+                                <div class="control-group" :class="[errors.has('product-form.warranty') ? 'has-error' : '']">
+                                    <label for="warranty" class="required">{{ __('seller::app.admin.seller.products.warranty') }}</label>
+                                    <input type="text" v-validate="'required'" class="control" id="warranty" name="warranty" value="{{ old('warranty') }}" data-vv-as="&quot;{{ __('seller::app.admin.seller.products.warranty') }}&quot;"/>
+                                    <span class="control-error" v-if="errors.has('product-form.warranty')">@{{ errors.first('product-form.warranty') }}</span>
+                                </div>
 
-                        @else
+                                @foreach ($inventorySources as $inventorySource)
 
-                            <seller-variant-list></seller-variant-list>
+                                    <div class="control-group" :class="[errors.has('product-form.inventories[{{ $inventorySource->id }}]') ? 'has-error' : '']">
+                                        <label>{{ $inventorySource->name }}</label>
 
-                        @endif
+                                        <input type="text" v-validate="'numeric|min:0'" name="inventories[{{ $inventorySource->id }}]" class="control" value="{{ old('inventories[' . $inventorySource->id . ']') }}" data-vv-as="&quot;{{ $inventorySource->name }}&quot;"/>
 
-                        <button type="submit" class="btn btn-lg btn-primary" style="margin-top: 20px;">
-                            {{ __('seller::app.admin.seller.submit') }}
-                        </button>
+                                        <span class="control-error" v-if="errors.has('product-form.inventories[{{ $inventorySource->id }}]')">@{{ errors.first('product-form.inventories[{!! $inventorySource->id !!}]') }}</span>
+                                    </div>
 
-                    </div>
+                                @endforeach
+
+                            @else
+
+                                <seller-variant-list></seller-variant-list>
+
+                            @endif
+
+                            <button type="submit" class="btn btn-lg btn-primary" style="margin-top: 20px;">
+                                {{ __('seller::app.admin.seller.submit') }}
+                            </button>
+
+                        </div>
+
+                    </form>
+
                 </div>
-                </form>
-            <div>
+            </modal>
         </div>
 
     </script>
@@ -144,6 +115,8 @@
                 no_result : false,
 
                 seller_id : '',
+
+                product_id : @json($product->product->id),
             }),
 
             methods: {
@@ -168,14 +141,16 @@
                 showModal(id) {
                     this_this = this;
                     this_this.seller_id = id;
-                    var modal = document.getElementById('modal');
-                    modal.style.display = "block";
+                    this_this.$root.$root.showModal('productForm')
                 },
 
-                closeModal () {
-                    var modal = document.getElementById('modal');
-                    modal.style.display = "none";
-                },
+                onSubmit (e) {
+                    this.$validator.validateAll('product-form').then((result) => {
+                        if (result) {
+                            e.target.submit();
+                        }
+                    });
+                }
             }
         });
     </script>
@@ -331,4 +306,3 @@
     </script>
 @endpush
 @endif
-
